@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Filter from './components/Filter';
 import Products from './components/Products';
+import Cart from "./components/Cart";
 import data from "./data.json";
 
 function App () {
@@ -8,7 +9,33 @@ function App () {
   const [products, setProducts] = useState(data.products);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
-   const sortProducts = (e) =>{
+  const [cartItems, setCartItems] = useState([]);
+
+  
+
+  //add to cart 
+  const addToCart = (product) => {
+    const cartItemsObj = cartItems.slice();
+    console.log(cartItemsObj);
+    let alreadyInCart = false;
+    cartItemsObj.forEach((item) => {
+      if(item._id === product._id){
+        item.count++;
+      alreadyInCart = true;
+      }
+    });
+    if(!alreadyInCart) {
+      cartItemsObj.push({ ...product, count: 1});
+    }
+      setCartItems(cartItemsObj);
+  } 
+  //remove to cart 
+  const removeFromCart = (product) => {
+  const cartItemsObj = cartItems.slice();
+  setCartItems(cartItemsObj.filter(x=>x._id !== product._id));
+  }
+  //Sort Products 
+  const sortProducts = (e) =>{
     const sort = e.target.value;
     setSort(e.target.value);
     setProducts(data.products.slice().sort((a,b) =>
@@ -24,6 +51,8 @@ function App () {
       ? 1:-1,
     ));  
     };
+
+    //Filter Products by Sizes
     const filterProducts = (e) =>{
       console.log(e.target.value);
       if(e.target.value === ""){
@@ -37,8 +66,6 @@ function App () {
         (product) => product.availableSizes.indexOf(e.target.value) >= 0
       ));
       }
-      
-      
     }
     return (
       <div className="grid-container">
@@ -55,9 +82,11 @@ function App () {
             sortProducts={sortProducts}
             filterProducts={filterProducts}
             />
-            <Products products={products}/> 
+            <Products products={products} addToCart={addToCart}/> 
             </div>
-            <div className="sidebar">Cart Items</div>
+            <div className="sidebar">
+              <Cart cartItems={cartItems} removeFromCart={removeFromCart}  />
+            </div>
           </div>
         </main>
         <footer>
