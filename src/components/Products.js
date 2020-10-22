@@ -36,7 +36,6 @@ const Products = (props) => {
                         
                         >
                             <div className="product">
-                                {/* <a href={"#" + product._id} onClick={() => props.setModalValue(product)}> */}
                                 <a href={"#" + product._id} key={product._id} onClick={() => props.setModalValue(product)}>
                                     <img src={product.image} alt={product.title} />
                                     <p>{product.title}</p>
