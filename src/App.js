@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Filter from './components/Filter';
 import Products from './components/Products';
 import Cart from "./components/Cart";
+import Modal from "./components/Modal"
 import data from "./data.json";
 
 function App () {
@@ -10,8 +11,14 @@ function App () {
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
   const [cartItems, setCartItems] = useState(JSON.parse(localStorage.getItem("cartItems")) ? JSON.parse(localStorage.getItem("cartItems")) : []);
+  const [showModal, setShowModal] = useState({visible:false, product:[]})
 
   
+
+  //show modal
+  const setModalValue = (product) => {
+    setShowModal({visible:true, product});
+  }
 
   //add to cart 
   const addToCart = (product) => {
@@ -79,6 +86,7 @@ function App () {
           <a href="/">React Shopping Cart</a>
         </header>
         <main>
+          <Modal showModal={showModal} setShowModal={setShowModal} addToCart={addToCart} />
           <div className="content">
             <div className="main"> 
             <Filter 
@@ -88,7 +96,7 @@ function App () {
             sortProducts={sortProducts}
             filterProducts={filterProducts}
             />
-            <Products products={products} addToCart={addToCart}/> 
+            <Products products={products} addToCart={addToCart} setModalValue={setModalValue}/> 
             </div>
             <div className="sidebar">
               <Cart cartItems={cartItems} removeFromCart={removeFromCart} createOrder={createOrder}  />

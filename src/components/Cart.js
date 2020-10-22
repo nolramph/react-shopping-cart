@@ -1,5 +1,31 @@
 import React, {useState} from 'react'
 import formatCurrency from "../util"
+import {motion, AnimatePresence} from "framer-motion"
+
+const cartVariants = {
+    hidden: {
+        opacity: 0,
+        x : "-10px"
+    },
+    visible: {
+        opacity: 1,
+        x: 0
+    }
+}
+
+const checkoutVariants = {
+    hidden: {
+        opacity: 0,
+        x : "30px"
+    },
+    visible: (custom) => ({
+        opacity: 1,
+        x: 0,
+        transition: {
+           delay : custom * 0.2
+        }
+    })
+}
 
 const Cart = (props) => {
     const {cartItems} = props
@@ -42,8 +68,15 @@ const Cart = (props) => {
             }
                 <div className="cart">
                     <ul className="cart-items">
+                    <AnimatePresence>
                         {cartItems.map(item => (
-                            <li key={item._id}>
+                            <motion.li 
+                                key={item._id}
+                                variants={cartVariants}
+                                initial="hidden"
+                                animate="visible"
+                                exit="hidden"
+                            >
                                 <div>
                                     <img src={item.image} alt={item.title} />
                                 </div>
@@ -54,8 +87,9 @@ const Cart = (props) => {
                                         <button onClick={() => props.removeFromCart(item)}>Remove</button>
                                     </div>
                                 </div>
-                            </li>
+                            </motion.li>
                         ))}
+                        </AnimatePresence>
                     </ul>
                 </div>
                 {cartItems.length !== 0 && (
@@ -73,7 +107,12 @@ const Cart = (props) => {
                     <div className="cart">
                         <form onSubmit={createOrder}>
                             <ul className="form-container">
-                                <li>
+                                <motion.li
+                                    variants={checkoutVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    custom={1}
+                                >
                                     <label>Email</label>
                                     <input 
                                     name="email"
@@ -81,8 +120,13 @@ const Cart = (props) => {
                                     required
                                     onChange={handleInput}
                                     />
-                                </li>
-                                <li>
+                                </motion.li>
+                                <motion.li
+                                    variants={checkoutVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    custom={2}
+                                >
                                     <label>Name</label>
                                     <input 
                                     name="name"
@@ -90,8 +134,13 @@ const Cart = (props) => {
                                     required
                                     onChange={handleInput}
                                 />
-                                </li>
-                                <li>
+                                </motion.li>
+                                <motion.li
+                                    variants={checkoutVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    custom={3}
+                                >
                                     <label>Address</label>
                                     <input 
                                     name="address"
@@ -99,10 +148,13 @@ const Cart = (props) => {
                                     required
                                     onChange={handleInput}
                                 />
-                                </li>
-                                <li>
+                                </motion.li>
+                                <motion.li
+                                    initial={{y: '30px', opacity: 0}}
+                                    animate={{y: 0, opacity: 1, transition: {delay: 1}}}
+                                >
                                     <button className="button primary" type="submit">Checkout</button>
-                                </li>
+                                </motion.li>
                             </ul>
                         </form>
                     </div>
